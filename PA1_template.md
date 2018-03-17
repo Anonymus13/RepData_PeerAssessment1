@@ -6,6 +6,7 @@ output:
 ---
 
 ###Loading and preprocessing the data
+
 Data are first loaded into __R__ by especifying the location path where it is saved. Then the dates in the original data are processed with [as.Date](https://cran.r-project.org/web/packages/date/date.pdf) function, in order to have them in the appropiate POSIX date format.
 
 
@@ -18,6 +19,7 @@ data$date <- as.Date(data$date, format='%Y-%m-%d')
 ```
 ***
 ###Mean total number of steps taken per day
+
 To compute the total number of steps taken in each day, steps are aggregated using [aggregate](https://www.rdocumentation.org/packages/stats/versions/3.4.3/topics/aggregate) function with argument _FUN_ = __"sum"__ for each date using. Then a histogram is created from this array using [hist](https://www.rdocumentation.org/packages/graphics/versions/3.4.3/topics/hist) function.  
 
 ```r
@@ -47,6 +49,7 @@ median(steps_day$tot_steps, na.rm = T)
 ```
 ***
 ###Average daily activity pattern
+
 In a similar code the mean number of steps taken for every interval accross each day is computed. However, this time instead of __"sum"__, __"mean"__ is used with the argument _na.rm_ as __T__ (True) to omit all "NA"" values. Then the time series is ploted using this average number of steps by interval, with the _type_ argument as __"l"__(line). 
 
 ```r
@@ -68,6 +71,7 @@ steps_interval$interval[which.max(steps_interval$avg_steps)]
 ```
 ***
 ###Imputing missing values
+
 First the total number of NA values is computed.
 
 ```r
@@ -85,7 +89,7 @@ nonNA <- merge(data, steps_interval, by = "interval")
 nonNA$steps[is.na(nonNA$steps)] <- nonNA$avg_steps[is.na(nonNA$steps)]
 steps_day2 <- aggregate(nonNA$steps, list(nonNA$date), FUN = sum)
 colnames(steps_day2) <- colnames(steps_day)
-hist(steps_day2$tot_steps, breaks = 10 , main = "Distribution of total steps per day", xlab="Steps per day")
+hist(steps_day2$tot_steps, breaks = 10 , main = "Distribution of total steps per day without NA values", xlab="Steps per day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
@@ -125,6 +129,7 @@ median(steps_day2$tot_steps)
 ```
 ***
 ###Differences in activity patterns between weekdays and weekends
+
 For this final analysis the weekday is determined from the date columns and added to a new column. Then all __"Sat"__ and __"Sun"__ are labeled as __"Weekend"__ days and others as __"Weekdays"__ , updating the same column. Next, the average number of steps taken for every interval accross all weekends and weekdays is calculated and aggregated into a new dataset, _weekdays_. 
 
 
